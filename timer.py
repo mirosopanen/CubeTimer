@@ -1,53 +1,49 @@
-
-import pygame
-from pygame import *
+import curses
+from curses import wrapper
 import time
+import random
+import os
 import sys
 
-pygame.init()
-fps = 60
-fpsClock = pygame.time.Clock()
 
-width, height = (640, 480)
-
-screen = pygame.display.set_mode((width, height))
-text = "Jarkko is bi"
-textLen = 0
-typewriterEvent = pygame.USEREVENT+1
-pygame.time.set_timer(typewriterEvent, 100)
-textSurf = None
-
-pygame.font.init()
-timerFont = pygame.font.SysFont("Arial", 50)
+def startScreen(stdscr):
+    stdscr.clear()
+    stdscr.addstr("Rubics cube timer!")
+    stdscr.addstr("\nPress any key to start the timer")
+    stdscr.refresh()
+    stdscr.getkey()
 
 
-clock = pygame.time.Clock()
+def counter(stdscr):
+    pass
 
 
-initTime = 0
-countDownOn = False
-# Main loop
+def createShufflingScramble(stdscr, moves, createdScramble):
+    scramble = []
+    prevIndex = -1
+    while len(scramble) < 21:
+        index = random.randrange(len(moves))
 
-while True:
-    screen.fill((245, 245, 220))
-    clock.tick(30)
+        # check that no two movements are next to each other
+        if (index/3) != (prevIndex/3):
+            scramble.append(moves[index])
+            prevIndex = index
 
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
+    createdScramble = "".join(scramble)
 
-        if event.type == typewriterEvent:
-            textLen += 1
-            if textLen > len(text):
-                textLen = 0
-            textSurf = None if textLen == 0 else timerFont.render(
-                text[:textLen], True, (0, 0, 0))
 
-        if textSurf:
-            screen.blit(textSurf, textSurf.get_rect(
-                midleft=screen.get_rect().midleft).move(40, 0))
+def main(stdscr):
+    moves = ["R", "R'", "R2", "L", "L'", "L2", "U", "U'", "U2", "D",
+             "D'", "D2", "B", "B'", "B2", "F", "F'", "F2"]
 
-    pygame.display.set_caption("Rubics Cube Timer")
-    pygame.display.flip()
-    fpsClock.tick(fps)
+    startScreen(stdscr)
+
+
+wrapper(main)
+# timeOut = 120  # seconds which means 2 minutes solving time
+
+# for timer in range(0, timeOut, 1):
+#     sys.stdout.write("\r")
+#     sys.stdout.write("{:2d}".format(timer))
+#     sys.stdout.flush()
+#     time.sleep(1)
