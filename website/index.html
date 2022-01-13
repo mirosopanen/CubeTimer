@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jarkko is bi</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        height: 100%;
+        width: 100%;
+      }
+      body {
+        background-color: #3f3f3f;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 2rem;
+
+        font-family: JetBrains Mono NL;
+      }
+      #timer {
+        color: #f8f8f8;
+        font-size: 6rem;
+      }
+      #scramble {
+        color: #b5b5b5;
+
+        font-size: 2rem;
+      }
+    </style>
+  </head>
+  <body onkeydown="changeColor(true)" onkeyup="changeColor(false)">
+    <span id="scramble"> </span>
+    <span id="timer"> </span>
+
+    <script>
+      const timer = document.getElementById("timer");
+      const scramble = document.getElementById("scramble");
+
+      const moves = [
+        "R",
+        "R'",
+        "R2",
+        "L",
+        "L'",
+        "L2",
+        "U",
+        "U'",
+        "U2",
+        "D",
+        "D'",
+        "D2",
+        "B",
+        "B'",
+        "B2",
+        "F",
+        "F'",
+        "F2",
+      ];
+
+      function getRandomScramble() {
+        const generatedScramble = Math.floor(Math.random() * moves.length);
+
+        return moves[generatedScramble];
+      }
+
+      var prevIndex = null;
+
+      var totalScramble = [];
+      for (var i = 0; i < 10; i++) {
+        var index = getRandomScramble();
+
+        while (index == prevIndex) {
+          index = getRandomScramble();
+        }
+
+        prevIndex = index;
+
+        totalScramble.push(index);
+      }
+      scramble.innerText = totalScramble.join(" ");
+
+      timer.innerText = "Miro on iso mies ";
+
+      function changeColor(isup) {
+        timer.style.color = isup ? "green" : "#f8f8f8";
+
+        if (isup) {
+          document.body.removeChild(scramble);
+        }
+      }
+    </script>
+  </body>
+</html>
