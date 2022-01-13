@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jarkko is bi</title>
+    <title>Cube solving timer</title>
+    <link rel="shortcut icon" href="./favicon.png" type="image/x-icon" />
 
     <style>
       * {
@@ -38,11 +39,34 @@
       }
     </style>
   </head>
-  <body onkeydown="changeColor(true)" onkeyup="changeColor(false)">
+  <body>
     <span id="scramble"> </span>
     <span id="timer"> </span>
 
     <script>
+      document.addEventListener("keydown", (e) => {
+        if (e.code === "Space") {
+          timerTasks(true);
+        }
+
+        if (e.code === "Escape") {
+          milliseconds = 0;
+          seconds = 0;
+          minutes = 0;
+
+          isRunning = false;
+          clearInterval(interval);
+
+          timer.innerText = `${minutes}:${seconds}.${milliseconds}`;
+        }
+      });
+
+      document.addEventListener("keyup", (e) => {
+        if (e.code === "Space") {
+          timerTasks(false);
+        }
+      });
+
       const timer = document.getElementById("timer");
       const scramble = document.getElementById("scramble");
 
@@ -89,13 +113,48 @@
       }
       scramble.innerText = totalScramble.join(" ");
 
-      timer.innerText = "Miro on iso mies ";
+      var milliseconds = 0;
+      var seconds = 0;
+      var minutes = 0;
+      var isRunning = false;
+      var interval = null;
 
-      function changeColor(isup) {
-        timer.style.color = isup ? "green" : "#f8f8f8";
+      timer.innerText = `${minutes}:${seconds}.${milliseconds}`;
 
-        if (isup) {
-          document.body.removeChild(scramble);
+      function runTimer() {
+        if (isRunning) {
+          clearInterval(interval);
+          isRunning = false;
+
+          return;
+        }
+
+        isRunning = true;
+
+        interval = setInterval(() => {
+          milliseconds += 1;
+          if (milliseconds == 1000) {
+            seconds++;
+            milliseconds = 0;
+          }
+          if (seconds == 60) {
+            minutes++;
+            seconds = 0;
+          }
+
+          timer.innerText = `${minutes}:${seconds}.${milliseconds}`;
+        }, 1);
+      }
+
+      function timerTasks(isdown) {
+        timer.style.color = isdown
+          ? isRunning
+            ? "#be6868"
+            : "green"
+          : "#f8f8f8";
+
+        if (!isdown) {
+          runTimer();
         }
       }
     </script>
